@@ -22,7 +22,7 @@ public class CharacterDAO {
         return conexao;
     }
 
-    public static Connection listar() {
+    public static Connection listar(String nome) {
         Connection conexao = null;
 
         try {
@@ -30,9 +30,10 @@ public class CharacterDAO {
             conexao = DriverManager.getConnection("jdbc:mysql://localhost", "root", "admin@123");
 
             ResultSet characters = conexao.createStatement().
-                    executeQuery("SELECT * FROM RPG.Character");
+                    executeQuery("SELECT * FROM RPG.Character WHERE raceName = '"+nome+"' ");
             while (characters.next()) {
-                System.out.println(characters.getInt("id") + " " + characters.getString("nome"));
+                System.out.println( "\nID:" + characters.getInt("id") + "\n" +
+                                    "Nome: " + characters.getString("nome"));
             }
 
         } catch (ClassNotFoundException e) {
