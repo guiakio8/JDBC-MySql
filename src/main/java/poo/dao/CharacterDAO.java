@@ -1,9 +1,6 @@
 package poo.dao;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 
 public class CharacterDAO {
@@ -12,7 +9,7 @@ public class CharacterDAO {
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            conexao = DriverManager.getConnection("jdbc:mysql://localhost", "root", "admin@123");
+            conexao = DriverManager.getConnection("jdbc:mysql://localhost", "root", "admin123");
         } catch (ClassNotFoundException e) {
             System.out.println("Problema no Driver" + e);
         } catch (SQLException e) {
@@ -22,18 +19,45 @@ public class CharacterDAO {
         return conexao;
     }
 
-    public static Connection listar(String nome) {
+    public void inserirPersonagem(String nome, Integer forca, Integer destreza, Integer constituicao, Integer sabedoria,
+                                  Integer inteligencia, Integer carisma, String raceName) {
+
         Connection conexao = null;
 
         try {
+            // Faz a conexao do banco de dados
             Class.forName("com.mysql.cj.jdbc.Driver");
-            conexao = DriverManager.getConnection("jdbc:mysql://localhost", "root", "admin@123");
+            conexao = DriverManager.getConnection("jdbc:mysql://localhost", "root", "admin123");
+            Statement conn = conexao.createStatement();
 
+            // Ações da função
+            int characters = conexao.createStatement().
+                    executeUpdate("insert into RPG.`character` (nome, forca, destreza, constituicao, sabedoria, inteligencia, carisma, raceName)\n" +
+                            "values ('" + nome + "', " + forca + ", " + destreza + ", " + constituicao + ", " + sabedoria + ", " + inteligencia + "" +
+                            ", " + carisma + ", '" + raceName + "');");
+
+
+        } catch (ClassNotFoundException e) {
+            System.out.println("Problema no Driver" + e);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void listarPorNome(String nome) {
+        Connection conexao = null;
+
+        try {
+            // Faz a conexao do banco de dados
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            conexao = DriverManager.getConnection("jdbc:mysql://localhost", "root", "admin123");
+
+            // Ações da função
             ResultSet characters = conexao.createStatement().
-                    executeQuery("SELECT * FROM RPG.Character WHERE raceName = '"+nome+"' ");
+                    executeQuery("SELECT * FROM RPG.Character WHERE raceName = '" + nome + "' ");
             while (characters.next()) {
-                System.out.println( "\nID:" + characters.getInt("id") + "\n" +
-                                    "Nome: " + characters.getString("nome"));
+                System.out.println("\nID:" + characters.getInt("id") + "\n" +
+                        "Nome: " + characters.getString("nome"));
             }
 
         } catch (ClassNotFoundException e) {
@@ -41,6 +65,33 @@ public class CharacterDAO {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return conexao;
+    }
+
+    public void atualizarPersonagem(String nome){
+
+        Connection conexao = null;
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            conexao = DriverManager.getConnection("jdbc:mysql://localhost", "root", "admin123");
+
+            String sql = "update `character`\n" +
+                         "set  = \n" +
+                        if altNome
+                    "nome = " + nome +
+                         "where;";
+
+            int characters = conexao.createStatement().
+                    executeUpdate("");
+
+        } catch (ClassNotFoundException e) {
+            System.out.println("Problema no Driver" + e);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void main(String[] args) {
+        conectaDB();
     }
 }
