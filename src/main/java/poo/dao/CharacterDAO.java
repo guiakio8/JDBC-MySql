@@ -44,6 +44,35 @@ public class CharacterDAO {
         }
     }
 
+    public void listar() {
+        Connection conexao = null;
+
+        try {
+            // Faz a conexao do banco de dados
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            conexao = DriverManager.getConnection("jdbc:mysql://localhost", "root", "admin123");
+
+            // Ações da função
+            ResultSet characters = conexao.createStatement().
+                    executeQuery("SELECT * FROM RPG.`character`");
+            while (characters.next()) {
+                System.out.println("\nNome: " + characters.getString("nome") +
+                        "\nForca: " + characters.getInt("forca") +
+                        "\nDestreza: " + characters.getInt("destreza") +
+                        "\nConstituicao: " + characters.getInt("constituicao") +
+                        "\nSabedoria: " + characters.getInt("sabedoria") +
+                        "\nInteligencia: " + characters.getInt("inteligencia") +
+                        "\nCarisma: " + characters.getInt("carisma") +
+                        "\nRaca: " + characters.getString("raceName"));
+            }
+
+        } catch (ClassNotFoundException e) {
+            System.out.println("Problema no Driver" + e);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void listarPorNome(String nome) {
         Connection conexao = null;
 
@@ -67,7 +96,7 @@ public class CharacterDAO {
         }
     }
 
-    public void atualizarPersonagem(String nome){
+    public void atualizarPersonagem(String nome, String novoNome) {
 
         Connection conexao = null;
 
@@ -75,14 +104,11 @@ public class CharacterDAO {
             Class.forName("com.mysql.cj.jdbc.Driver");
             conexao = DriverManager.getConnection("jdbc:mysql://localhost", "root", "admin123");
 
-            String sql = "update `character`\n" +
-                         "set  = \n" +
-                        if altNome
-                    "nome = " + nome +
-                         "where;";
+            String sql = "update RPG.`character`\n" +
+                    "set nome = '" + novoNome + "'\n" +
+                    "where nome = '" + nome + "';";
 
-            int characters = conexao.createStatement().
-                    executeUpdate("");
+            int characters = conexao.createStatement().executeUpdate(sql);
 
         } catch (ClassNotFoundException e) {
             System.out.println("Problema no Driver" + e);
@@ -91,7 +117,25 @@ public class CharacterDAO {
         }
     }
 
-    public static void main(String[] args) {
-        conectaDB();
+    public void deletarPersonagem(String nome) {
+
+        Connection conexao = null;
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            conexao = DriverManager.getConnection("jdbc:mysql://localhost", "root", "admin123");
+
+            String sql = "delete\n" +
+                    "from RPG.`character`\n" +
+                    "where nome = '" + nome + "';";
+
+            int characters = conexao.createStatement().executeUpdate(sql);
+
+        } catch (ClassNotFoundException e) {
+            System.out.println("Problema no Driver" + e);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
+
 }
